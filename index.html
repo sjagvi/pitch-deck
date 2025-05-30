@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AITIF - The Future of AI Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 30px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        
+        .slide-indicator {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .slide-indicator.active {
+            width: 30px;
+            background: #667eea;
+            border-radius: 15px;
+        }
+        
+        /* Slide Styles */
+        .title-slide {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            text-align: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 5em;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #a0a0b0;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+        
+        .title-slide .tagline {
+            font-size: 1.5em;
+            color: #fbbf24;
+            animation: fadeInUp 1s ease 1s both;
+        }
+        
+        .problem-slide {
+            background: #0a0e27;
+            padding: 60px;
+        }
+        
+        .problem-slide h2 {
+            font-size: 3.5em;
+            margin-bottom: 50px;
+            text-align: center;
+            color: #e74c3c;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+        }
+        
+        .stat-card {
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #2d2d44;
+            text-align: center;
+            transform: scale(0);
+            animation: popIn 0.6s ease forwards;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stat-card:nth-child(2) { animation-delay: 0.4s; }
+        .stat-card:nth-child(3) { animation-delay: 0.6s; }
+        .stat-card:nth-child(4) { animation-delay: 0.8s; }
+        
+        .stat-number {
+            font-size: 4em;
+            font-weight: bold;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .stat-desc {
+            font-size: 1.2em;
+            color: #a0a0b0;
+        }
+        
+        .solution-slide {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0e27 100%);
+            padding: 60px;
+        }
+        
+        .solution-slide h2 {
+            font-size: 3.5em;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(90deg, #22c55e, #16a085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .architecture-preview {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .architecture-diagram {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 2px solid #667eea;
+            animation: floatIn 1s ease;
+        }
+        
+        .flow-diagram {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideInRight 1s ease;
+        }
+        
+        .market-slide {
+            background: #0a0e27;
+            padding: 60px;
+        }
+        
+        .market-slide h2 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #667eea;
+        }
+        
+        .market-value {
+            font-size: 6em;
+            font-weight: bold;
+            color: #fbbf24;
+            text-align: center;
+            margin: 40px 0;
+            animation: countUp 2s ease;
+        }
+        
+        .traction-slide {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            padding: 60px;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1400px;
+            margin: 50px auto;
+        }
+        
+        .metric {
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .metric-value {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #22c55e;
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            font-size: 1.2em;
+            color: #a0a0b0;
+        }
+        
+        .team-slide {
+            background: #0a0e27;
+            padding: 60px;
+        }
+        
+        .team-slide h2 {
+            font-size: 3.5em;
+            margin-bottom: 50px;
+            text-align: center;
+            color: #9b59b6;
+        }
+        
+        .cta-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            padding: 60px;
+        }
+        
+        .cta-slide h2 {
+            font-size: 4em;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .funding-amount {
+            font-size: 5em;
+            font-weight: bold;
+            margin: 30px 0;
+            animation: pulse 2s ease infinite;
+        }
+        
+        .use-of-funds {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .fund-item {
+            font-size: 1.3em;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .fund-item::before {
+            content: '→';
+            margin-right: 15px;
+            color: #fbbf24;
+            font-size: 1.5em;
+        }
+        
+        /* Animations */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes countUp {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Architecture slides specific styles */
+        .arch-slide {
+            background: #0a0e27;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .arch-slide h2 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .arch-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .arch-description {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .arch-description h3 {
+            font-size: 2em;
+            color: #f39c12;
+            margin-bottom: 20px;
+        }
+        
+        .arch-description ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .arch-description li {
+            font-size: 1.2em;
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #e0e0e0;
+        }
+        
+        .arch-description li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-size: 1.3em;
+        }
+        
+        .arch-visual {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: pulse 3s ease infinite;
+        }
+        
+        .labs-feature {
+            background: linear-gradient(135deg, #e74c3c 0%, #f39c12 100%);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 10px;
+            font-weight: bold;
+            animation: float 3s ease infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .competitive-advantage {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid #22c55e;
+        }
+        
+        .competitive-advantage h3 {
+            color: #22c55e;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title-slide h1 { font-size: 3em; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .arch-content { flex-direction: column; }
+            .metric-row { flex-direction: column; gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide title-slide active">
+        <h1>AITIF</h1>
+        <p class="subtitle">AI Threat Intelligence Platform by Mythropic</p>
+        <p class="tagline">The World's First AI Immune System</p>
+        <div style="margin-top: 50px; opacity: 0.7;">
+            <p style="font-size: 1.2em;">Protecting AI Systems Before They're Attacked</p>
+        </div>
+    </div>
+    
+    <!-- Slide 2: The Problem -->
+    <div class="slide problem-slide">
+        <h2>Every AI System Can Be Hacked</h2>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-number">73%</div>
+                <div class="stat-desc">of AI systems breached within 6 months</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$50B</div>
+                <div class="stat-desc">Annual cost of AI breaches by 2025</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12 min</div>
+                <div class="stat-desc">Average time to compromise unprotected AI</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-desc">Comprehensive AI security solutions (until now)</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 3: The Solution Overview -->
+    <div class="slide solution-slide">
+        <h2>Introducing AITIF: Complete AI Security</h2>
+        <div class="architecture-preview">
+            <div class="highlight-box">
+                <h3 style="color: #f39c12; text-align: center; margin-bottom: 30px;">End-to-End AI Security Platform</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: center;">
+                    <div>
+                        <div style="font-size: 3em; margin-bottom: 10px;">🔍</div>
+                        <h4 style="color: #667eea;">Discover</h4>
+                        <p>24/7 vulnerability hunting</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 3em; margin-bottom: 10px;">🧬</div>
+                        <h4 style="color: #22c55e;">Generate</h4>
+                        <p>500K+ attack variants</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 3em; margin-bottom: 10px;">🛡️</div>
+                        <h4 style="color: #e74c3c;">Protect</h4>
+                        <p>Real-time defense</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 4: Discovery Engine -->
+    <div class="slide arch-slide">
+        <h2>Step 1: Vulnerability Discovery Engine</h2>
+        <div class="arch-content">
+            <div class="arch-description">
+                <h3>Finding Threats Before Hackers Do</h3>
+                <ul>
+                    <li>Monitor 147+ sources continuously</li>
+                    <li>AI-powered pattern recognition</li>
+                    <li>50+ new vulnerabilities discovered daily</li>
+                    <li>Reddit, Discord, GitHub, Research Papers</li>
+                    <li>24/7 automated discovery</li>
+                </ul>
+                <div class="competitive-advantage">
+                    <h3>🚀 First-Mover Advantage</h3>
+                    <p>We see threats 6-12 hours before they go viral</p>
+                </div>
+            </div>
+            <div class="arch-visual">
+                <div class="highlight-box">
+                    <h4 style="color: #fbbf24; margin-bottom: 20px;">Live Discovery Metrics</h4>
+                    <div style="font-size: 3em; color: #22c55e; margin: 20px 0;">147</div>
+                    <p>Active sources monitored</p>
+                    <div style="margin-top: 20px;">
+                        <span style="color: #e74c3c; font-size: 1.5em;">⚡</span>
+                        <span>Real-time threat detection</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 5: Adversarial Labs -->
+    <div class="slide arch-slide">
+        <h2>Step 2: 🔬 Adversarial Labs (Our Secret Weapon)</h2>
+        <div class="arch-content">
+            <div class="arch-description">
+                <h3>24/7 Research & Development Center</h3>
+                <ul>
+                    <li>0-Day vulnerability research</li>
+                    <li>Red team operations</li>
+                    <li>AI vs AI automated testing</li>
+                    <li>Future threat modeling</li>
+                    <li>15+ novel exploits monthly</li>
+                </ul>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                    <span class="labs-feature">🧪 10K+ Daily Tests</span>
+                    <span class="labs-feature">🔮 6 Months Ahead</span>
+                    <span class="labs-feature">⚡ 11min to Protection</span>
+                </div>
+            </div>
+            <div class="arch-visual">
+                <div class="highlight-box" style="border-color: #e74c3c;">
+                    <h4 style="color: #e74c3c; margin-bottom: 20px;">Adversarial R&D Output</h4>
+                    <div style="font-size: 2.5em; color: #f39c12; margin: 20px 0;">92%</div>
+                    <p>Attack success rate in testing</p>
+                    <div style="margin-top: 30px; padding: 15px; background: rgba(231,76,60,0.1); border-radius: 10px;">
+                        <p style="color: #e74c3c; font-weight: bold;">Industry First:</p>
+                        <p>Only company with dedicated adversarial AI lab</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 6: Prompt Processing -->
+    <div class="slide arch-slide">
+        <h2>Step 3: Prompt Processing Pipeline</h2>
+        <div class="arch-content">
+            <div class="arch-description">
+                <h3>Industrial-Scale Attack Generation</h3>
+                <ul>
+                    <li>500+ prompts generated daily</li>
+                    <li>7-stage validation process</li>
+                    <li>Multi-model testing (GPT-4, Claude, Gemini)</li>
+                    <li>97% success rate</li>
+                    <li>12-minute pipeline</li>
+                </ul>
+                <div class="competitive-advantage">
+                    <h3>⚡ Speed Advantage</h3>
+                    <p>From discovery to tested prompt in 12 minutes<br/>
+                    Competitors: 2-3 weeks manual process</p>
+                </div>
+            </div>
+            <div class="arch-visual">
+                <div style="text-align: center;">
+                    <div style="display: inline-block; padding: 20px; margin: 10px; background: #1a1a2e; border-radius: 15px; border: 2px solid #22c55e;">
+                        <div style="font-size: 2em; color: #22c55e;">350</div>
+                        <p>Daily production</p>
+                    </div>
+                    <div style="display: inline-block; padding: 20px; margin: 10px; background: #1a1a2e; border-radius: 15px; border: 2px solid #f39c12;">
+                        <div style="font-size: 2em; color: #f39c12;">97%</div>
+                        <p>Quality rate</p>
+                    </div>
+                    <div style="display: inline-block; padding: 20px; margin: 10px; background: #1a1a2e; border-radius: 15px; border: 2px solid #e74c3c;">
+                        <div style="font-size: 2em; color: #e74c3c;">12min</div>
+                        <p>Processing time</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 7: Evaluation Engine -->
+    <div class="slide arch-slide">
+        <h2>Step 4: Evaluation & Scoring Engine</h2>
+        <div class="arch-content">
+            <div class="arch-description">
+                <h3>Comprehensive Security Assessment</h3>
+                <ul>
+                    <li>Test against customer's actual AI models</li>
+                    <li>200+ attack vectors per assessment</li>
+                    <li>Risk scoring (0-100)</li>
+                    <li>Compliance mapping</li>
+                    <li>&lt;5 minute full evaluation</li>
+                </ul>
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <p><strong>Industry Benchmark:</strong><br/>
+                    Average AI Security Score: 72/100<br/>
+                    Critical vulnerabilities in 73% of systems</p>
+                </div>
+            </div>
+            <div class="arch-visual">
+                <div style="background: #1a1a2e; padding: 30px; border-radius: 20px; border: 2px solid #f39c12;">
+                    <h4 style="color: #f39c12; text-align: center; margin-bottom: 20px;">Testing Coverage</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="color: #e74c3c; font-size: 1.5em;">🎯</div>
+                            <p>Prompt Injection</p>
+                        </div>
+                        <div>
+                            <div style="color: #f39c12; font-size: 1.5em;">🔍</div>
+                            <p>Data Leakage</p>
+                        </div>
+                        <div>
+                            <div style="color: #9b59b6; font-size: 1.5em;">🔓</div>
+                            <p>Jailbreaking</p>
+                        </div>
+                        <div>
+                            <div style="color: #667eea; font-size: 1.5em;">🌀</div>
+                            <p>Context Attacks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 8: Compliance & Reporting -->
+    <div class="slide arch-slide">
+        <h2>Step 5: Compliance Mapping & Reporting</h2>
+        <div class="arch-content">
+            <div class="arch-description">
+                <h3>Automatic Regulatory Compliance</h3>
+                <ul>
+                    <li>Map to 20+ compliance frameworks</li>
+                    <li>GDPR, EU AI Act, SOC 2, HIPAA</li>
+                    <li>Automated gap analysis</li>
+                    <li>Executive & technical reports</li>
+                    <li>Real-time dashboards</li>
+                </ul>
+                <div style="margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap;">
+                    <span style="background: #22c55e; padding: 10px 20px; border-radius: 20px;">✓ GDPR</span>
+                    <span style="background: #667eea; padding: 10px 20px; border-radius: 20px;">✓ SOC 2</span>
+                    <span style="background: #f39c12; padding: 10px 20px; border-radius: 20px;">✓ AI Act</span>
+                    <span style="background: #e74c3c; padding: 10px 20px; border-radius: 20px;">✓ HIPAA</span>
+                </div>
+            </div>
+            <div class="arch-visual">
+                <div class="highlight-box">
+                    <h4 style="color: #9b59b6; margin-bottom: 20px;">Delivery Channels</h4>
+                    <div style="text-align: left; padding: 20px;">
+                        <p style="margin: 10px 0;">🌐 Web Dashboard</p>
+                        <p style="margin: 10px 0;">📱 Mobile App</p>
+                        <p style="margin: 10px 0;">🔌 REST API</p>
+                        <p style="margin: 10px 0;">📧 Automated Reports</p>
+                        <p style="margin: 10px 0;">🤖 Slack/Teams Integration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 9: Complete Flow -->
+    <div class="slide arch-slide">
+        <h2>Complete End-to-End Protection</h2>
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div class="highlight-box" style="background: rgba(22,197,94,0.1); border-color: #22c55e;">
+                <h3 style="color: #22c55e; text-align: center; margin-bottom: 30px;">
+                    🚀 From Vulnerability Discovery to Customer Protection in 11 Minutes
+                </h3>
+                <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🔍</div>
+                        <p><strong>Discover</strong><br/>147+ sources</p>
+                    </div>
+                    <div style="font-size: 2em; color: #667eea;">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🔬</div>
+                        <p><strong>Research</strong><br/>Adversarial Labs</p>
+                    </div>
+                    <div style="font-size: 2em; color: #667eea;">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🧬</div>
+                        <p><strong>Generate</strong><br/>500+ prompts/day</p>
+                    </div>
+                    <div style="font-size: 2em; color: #667eea;">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
+                        <p><strong>Test</strong><br/>Multi-model</p>
+                    </div>
+                    <div style="font-size: 2em; color: #667eea;">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🛡️</div>
+                        <p><strong>Protect</strong><br/>Real-time</p>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 40px; text-align: center;">
+                <div style="display: inline-block; background: #1a1a2e; padding: 30px 50px; border-radius: 20px; border: 2px solid #fbbf24;">
+                    <p style="font-size: 1.5em; color: #fbbf24; margin-bottom: 10px;">Attacks Blocked Today</p>
+                    <div style="font-size: 3em; color: #fff; font-weight: bold;">47,892</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 10: Market Opportunity -->
+    <div class="slide market-slide">
+        <h2>Massive Market Opportunity</h2>
+        <div class="market-value">$50B</div>
+        <p style="text-align: center; font-size: 1.5em; color: #a0a0b0;">Total Addressable Market by 2027</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1000px; margin: 50px auto;">
+            <div style="text-align: center;">
+                <div style="font-size: 3em; color: #22c55e; font-weight: bold;">187%</div>
+                <p>CAGR</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 3em; color: #f39c12; font-weight: bold;">10x</div>
+                <p>Growth in 3 years</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 3em; color: #e74c3c; font-weight: bold;">0</div>
+                <p>Direct competitors</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 11: Traction -->
+    <div class="slide traction-slide">
+        <h2 style="text-align: center; color: #22c55e; margin-bottom: 50px;">Explosive Growth & Traction</h2>
+        <div class="metric-row">
+            <div class="metric">
+                <div class="metric-value">$2.1M</div>
+                <div class="metric-label">Current ARR</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">24</div>
+                <div class="metric-label">Enterprise Customers</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">150%</div>
+                <div class="metric-label">Net Revenue Retention</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">$12M</div>
+                <div class="metric-label">Avg Saved per Client</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <div class="highlight-box" style="display: inline-block; max-width: 800px;">
+                <p style="font-size: 1.5em; font-style: italic; margin-bottom: 20px;">
+                    "AITIF discovered and blocked a critical vulnerability in our AI system that could have exposed millions of customer records. ROI proven in the first week."
+                </p>
+                <p style="color: #22c55e;">— CISO, Fortune 500 Financial Institution</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 12: Competitive Moat -->
+    <div class="slide arch-slide">
+        <h2>Unbreachable Competitive Moat</h2>
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                <div class="competitive-advantage">
+                    <h3>🏰 Data Network Effects</h3>
+                    <p>Every attack we block makes us smarter. 6 months = 500,000 labeled attacks. Competitors starting today are already 500,000 data points behind.</p>
+                </div>
+                <div class="competitive-advantage">
+                    <h3>⚡ Speed of Innovation</h3>
+                    <p>We ship daily. Big tech ships quarterly. By the time they copy v1, we're on v100.</p>
+                </div>
+                <div class="competitive-advantage">
+                    <h3>🎯 Singular Focus</h3>
+                    <p>This is ALL we do. For Microsoft, it's project #847. Focus beats resources every time.</p>
+                </div>
+                <div class="competitive-advantage">
+                    <h3>🔬 Adversarial Labs</h3>
+                    <p>Only company with 24/7 dedicated adversarial AI research. 6 months ahead of emerging threats.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 13: Team -->
+    <div class="slide team-slide">
+        <h2>Built by the Best in AI Security</h2>
+        <div style="text-align: center; max-width: 1000px; margin: 0 auto;">
+            <p style="font-size: 1.5em; margin-bottom: 40px; color: #a0a0b0;">
+                Leadership team 
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+                <div style="background: #1a1a2e; padding: 30px; border-radius: 20px; border: 2px solid #9b59b6;">
+                    <h3 style="color: #9b59b6;">Technical Excellence</h3>
+                    <p>Published 47 papers on AI security</p>
+                    <p>12 patents pending</p>
+                    <p>Created industry-standard frameworks</p>
+                </div>
+                <div style="background: #1a1a2e; padding: 30px; border-radius: 20px; border: 2px solid #9b59b6;">
+                    <h3 style="color: #9b59b6;">Advisory Board</h3>
+                    <p>Former CSO </p>
+                    <p>Prof. of AI </p>
+                    <p>Partner</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 14: CTA -->
+    <div class="slide cta-slide">
+        <h2>Join Us in Building the Future</h2>
+        <div class="funding-amount">$10M Series A</div>
+        <p style="font-size: 1.5em; margin-bottom: 30px;">Lead the AI Security Revolution</p>
+        <div class="use-of-funds">
+            <h3 style="color: #fbbf24; margin-bottom: 20px;">Use of Funds:</h3>
+            <div class="fund-item">Scale Adversarial Labs (10→30 researchers)</div>
+            <div class="fund-item">Expand model coverage (8→50+ AI models)</div>
+            <div class="fund-item">Enterprise sales team (2→20)</div>
+            <div class="fund-item">Global expansion (US→EU→APAC)</div>
+            <div class="fund-item">R&D for quantum-resistant security</div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <p style="font-size: 1.3em;">Valuation: $50M post | Lead: $5M</p>
+            <p style="font-size: 1.5em; margin-top: 20px; color: #fbbf24;">
+                We're not just building a product.<br/>
+                We're building the immune system for the AI age.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="changeSlide(-1)">Previous</button>
+        <div id="indicators"></div>
+        <button class="nav-btn" onclick="changeSlide(1)">Next</button>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        // Create slide indicators
+        const indicatorsContainer = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'slide-indicator';
+            if (i === 0) indicator.classList.add('active');
+            indicator.onclick = () => goToSlide(i);
+            indicatorsContainer.appendChild(indicator);
+        }
+        
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Update indicators
+            document.querySelectorAll('.slide-indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+        
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = totalSlides - 1;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            updateSlide();
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+        
+        // Touch support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) changeSlide(1);
+            if (touchEndX > touchStartX + 50) changeSlide(-1);
+        }
+    </script>
+</body>
+</html>
